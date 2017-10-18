@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains one_item_per_cart.module.
+ */
+
+use Drupal\commerce_store\Entity\Store;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function one_item_per_cart_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the one_item_per_cart module.
+    case 'help.page.one_item_per_cart':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Empties the cart before adding new item to cart.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Alter the add to cart form 2.
+ */
+function one_item_per_cart_form_alter(&$form, &$form_state, $form_id) {
+  // Check when the right form is passed.
+  if ($form_id == 'commerce_order_item_add_to_cart_form_commerce_product_2' or $form_id == 'commerce_order_item_default_add_to_cart_1_form') {
+    $form['#validate'][] = '_one_item_per_cart_validate';
+    $form['actions']['submit']['#submit'][] = '_one_item_per_cart_goto_cart';
+  }
+}
+
+/**
+ * Set form redirect again to cart.
+ */
+function _one_item_per_cart_goto_cart($form, $form_state) {
+  $form_state->setRedirect('commerce_cart.page');
+}
+
+/**
+ * Validate form method.
+ */
+function _one_item_per_cart_validate($form, $form_state) {
+  // The logics come from modules/cart/src/Form/AddToCartForm.php def submitForm
+  // Loading is based off of the primary key [Integer]
+  // 1 would be the first one saved, 2 the next, etc.
+  // @todo Discover the id of the store
+  $store = Store::load(1);
+  // @todo resolvce the type
+  $order_type = 'default';
+
+  $cart_provider = \Drupal::service('commerce_cart.cart_provider');
+  $cart_manager = \Drupal::service('commerce_cart.cart_manager');
+  $cart = $cart_provider->getCart($order_type, $store);
+
+  if ($cart) {
+    $cart_manager->emptyCart($cart);
+  }
+}

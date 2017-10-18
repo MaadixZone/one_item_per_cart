@@ -1,0 +1,7 @@
+name: One item per cart
+type: module
+description: Empties the cart before adding new item to cart.
+core: 8.x
+package: Custom
+dependencies:
+  - commerce_cart

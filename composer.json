@@ -1,0 +1,14 @@
+{
+  "name": "drupal/one_item_per_cart",
+  "type": "drupal-module",
+  "description": "Empties the cart before adding new item to cart.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/one_item_per_cart",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/one_item_per_cart",
+    "source": "http://cgit.drupalcode.org/one_item_per_cart"
+  },
+  "require": { }
+}
