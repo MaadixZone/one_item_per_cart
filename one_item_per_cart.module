@@ -29,7 +29,7 @@ function one_item_per_cart_help($route_name, RouteMatchInterface $route_match) {
  */
 function one_item_per_cart_form_alter(&$form, &$form_state, $form_id) {
   // Check when the right form is passed.
-  if ($form_id == 'commerce_order_item_add_to_cart_form_commerce_product_2' or $form_id == 'commerce_order_item_default_add_to_cart_1_form') {
+  if (preg_match("/commerce_order_item_add_to_cart_form_commerce_product_[0-9]*$/",$form_id)) {
     $form['#validate'][] = '_one_item_per_cart_validate';
     $form['actions']['submit']['#submit'][] = '_one_item_per_cart_goto_cart';
   }
